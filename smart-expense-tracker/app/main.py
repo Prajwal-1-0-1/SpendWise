@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File,HTTPException
 from app.database import engine,SessionLocal
 from app.models import Base,Expense
 from app.services.gemini_service import parse_receipt
@@ -39,22 +39,36 @@ async def upload_receipt(file: UploadFile = File(...)):
 
     return expense
 
-
-
-@app.post("/test-expense")
-def test_expense():
+@app.get("/expenses")
+def get_expenses():
     db = SessionLocal()
+    expenses = db.query(Expense).all()
+    return expenses
 
-    expense = Expense(
-        merchant="Dominos",
-        amount=500,
-        category="Food",
-        purchase_date="2026-06-05"
-    )
 
-    db.add(expense)
+@app.get(f"/expenses/{id}")
+def get_expense(id: int):
+    db = SessionLocal()
+    expense = db.query(Expense).filter(Expense.id == id).first()
+
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    
+    return expense
+
+@app.delete("/expenses/{id}")
+def delete_expense(id: int):
+    db = SessionLocal()
+    expense = db.query(Expense).filter(Expense.id == id).first()
+
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    
+    db.delete(expense)
     db.commit()
 
-    return {"message": "saved"}
+    return {"message": "Expense deleted successfully"}
+
+
 
 
