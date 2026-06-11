@@ -34,7 +34,7 @@ def verify_password(
         hashed_password
     )
 
-SECRET_KEY = "your-secret-key"
+SECRET_KEY = "9f4c2d8a1b7e3f6c5a8d2e1f4b7c9a3e6d8f1c2b5a7e9d3f"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
