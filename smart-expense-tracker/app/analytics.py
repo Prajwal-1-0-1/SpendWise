@@ -1,4 +1,6 @@
-from fastapi import APIRouter,HTTPException
+from fastapi import APIRouter,HTTPException, Depends
+from app.models import User
+from app.auth import get_current_user
 from sqlalchemy import func
 from app.database import engine,SessionLocal
 from app.models import Base,Expense
@@ -9,16 +11,18 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
 @router.get("/total-expenditure")
-def get_total_expenditure():
+def get_total_expenditure(current_user: User = Depends(get_current_user)):
     db = SessionLocal()
-    total = db.query(func.sum(Expense.amount)).scalar()
+
+    total = db.query(func.sum(Expense.amount)).filter(Expense.user_id == current_user.id).scalar()
+    
     db.close()
-    return {"total_expenditure": total}
+    return {"total_expenditure": total or 0}
 
 
 
 @router.get("/monthly_expenditure/{year}/{month}")
-def get_monthly_expenditure(year: int, month: int):
+def get_monthly_expenditure(year: int, month: int, current_user: User = Depends(get_current_user)):
 
     if not (1 <= month <= 12):
         raise HTTPException(status_code=400, detail="Month must be between 1 and 12")
@@ -26,7 +30,8 @@ def get_monthly_expenditure(year: int, month: int):
     db = SessionLocal()
     total = db.query(func.sum(Expense.amount)).filter(
         func.extract('year', Expense.purchase_date) == year,
-        func.extract('month', Expense.purchase_date) == month
+        func.extract('month', Expense.purchase_date) == month,
+        Expense.user_id == current_user.id
     ).scalar()
 
     if total is None:
@@ -37,11 +42,12 @@ def get_monthly_expenditure(year: int, month: int):
 
 
 @router.get("/category_expenditure/{category}")
-def get_category_expenditure(category: str):
+def get_category_expenditure(category: str, current_user: User = Depends(get_current_user)):
     db = SessionLocal()
     total = db.query(func.sum(Expense.amount)).filter(
-        Expense.category == category
-    ).scalar()
+            Expense.category == category,
+            Expense.user_id == current_user.id
+        ).scalar()
 
     if total is None:
         total = 0.0
@@ -51,15 +57,17 @@ def get_category_expenditure(category: str):
 
 
 @router.get("/category_breakdown")
-def get_category_breakdown():
+def get_category_breakdown(current_user: User = Depends(get_current_user)):
     db = SessionLocal()
 
     category_totals = db.query(
         Expense.category,
         func.sum(Expense.amount)
-    ).group_by(
-        Expense.category
-    ).all()
+        ).filter(
+            Expense.user_id == current_user.id
+        ).group_by(
+            Expense.category
+        ).all()
 
     result = [
         {
