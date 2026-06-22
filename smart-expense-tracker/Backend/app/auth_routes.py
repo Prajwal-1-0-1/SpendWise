@@ -23,9 +23,7 @@ def register(user: UserCreate):
 
     new_user = User(
         username=user.username,
-        hashed_password=hash_password(
-            user.password
-        )
+        hashed_password=hash_password(user.password)
     )
 
     db.add(new_user)
@@ -46,10 +44,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     if not db_user:
         raise HTTPException(status_code=401,detail="Invalid credentials")
 
-    if not verify_password(
-        form_data.password,
-        db_user.hashed_password
-    ):
+    if not verify_password(form_data.password,db_user.hashed_password):
         raise HTTPException(status_code=401,detail="Invalid credentials")
 
     token = create_access_token(

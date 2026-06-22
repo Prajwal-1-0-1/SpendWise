@@ -16,9 +16,7 @@ def parse_receipt(image_path):
 
     prompt = """
     Extract merchant, amount, category and purchase date from this receipt.
-
-    Return ONLY valid JSON.
-
+    Return only valid JSON.
     Example:
     {
         "merchant": "",

@@ -1,21 +1,27 @@
-from fastapi import APIRouter, Depends, FastAPI, UploadFile, File,HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File,HTTPException
 from app.database import engine,SessionLocal
 from app.models import Base,Expense, User
 from app.auth import get_current_user, oauth2_scheme
 from app.services.gemini_service import parse_receipt
+from app.schemas import ExpenseUpdate
 import os
 
 
 
 router = APIRouter(prefix="/crud", tags=["crud"])
-
-
 os.makedirs("uploads", exist_ok=True)
 
 
-@router.post("/upload-receipt")
-async def upload_receipt(file: UploadFile = File(...),current_user: User = Depends(get_current_user)):
+def get_db():
     db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@router.post("/upload-receipt")
+async def upload_receipt(file: UploadFile = File(...),current_user: User = Depends(get_current_user),db: SessionLocal = Depends(get_db)):
 
     filepath = f"uploads/{file.filename}"
 
@@ -42,23 +48,21 @@ async def upload_receipt(file: UploadFile = File(...),current_user: User = Depen
     db.add(expense)
     db.commit()
     db.refresh(expense)
-    db.close()  
-
-    return expense
+ 
+    return {"message" : "Receipt uploaded successfully", "expense" : expense}
 
 
 
 
 @router.get("/get_expenses")
-def get_expenses(current_user: User = Depends(get_current_user)):
-    db = SessionLocal()
+def get_expenses(current_user: User = Depends(get_current_user),db: SessionLocal = Depends(get_db)):
+
     
 
     expenses = db.query(Expense).filter(
                Expense.user_id == current_user.id,
                ).all()
     
-    db.close()
 
     return expenses
 
@@ -66,14 +70,14 @@ def get_expenses(current_user: User = Depends(get_current_user)):
 
 
 @router.get("/get_expense/{id}")
-def get_expense(id: int, current_user: User = Depends(get_current_user)):
-    db = SessionLocal()
+def get_expense(id: int, current_user: User = Depends(get_current_user),db: SessionLocal = Depends(get_db)):
+
     expense = db.query(Expense).filter(
             Expense.id == id,
             Expense.user_id == current_user.id
             ).first()
     
-    db.close()
+
 
     if not expense:
         raise HTTPException(status_code=404, detail="Expense not found")
@@ -83,8 +87,8 @@ def get_expense(id: int, current_user: User = Depends(get_current_user)):
 
 
 @router.delete("/delete_expenses/{id}")
-def delete_expense(id: int,current_user: User = Depends(get_current_user)):
-    db = SessionLocal()
+def delete_expense(id: int,current_user: User = Depends(get_current_user),db: SessionLocal = Depends(get_db)):
+
     expense = db.query(Expense).filter(
                 Expense.id == id,
                 Expense.user_id == current_user.id
@@ -95,7 +99,29 @@ def delete_expense(id: int,current_user: User = Depends(get_current_user)):
     
     db.delete(expense)
     db.commit()
-    db.close()
+
 
     return {"message": "Expense deleted successfully"}
+
+
+@router.put("/update_expense/{id}")
+def update_expense(id: int,expense: ExpenseUpdate,current_user: User = Depends(get_current_user),db: SessionLocal = Depends(get_db)):
+    exp = db.query(Expense).filter(
+        Expense.id == id,
+        Expense.user_id == current_user.id
+    ).first()
+
+    if not exp:
+        raise HTTPException(status_code=404, detail="Expense not found")
+
+    exp.merchant = expense.merchant
+    exp.amount = expense.amount
+    exp.category = expense.category
+    exp.purchase_date = expense.purchase_date
+
+    db.commit()
+    db.refresh(exp)
+
+    return {"message": "Expense updated successfully","expense": exp}
+    
 

@@ -6,10 +6,10 @@ class Expense(Base):
     __tablename__ = "expenses"
 
     id = Column(Integer, primary_key=True)
-    merchant = Column(String)
-    amount = Column(Float)
-    category = Column(String)
-    purchase_date = Column(Date)
+    merchant = Column(String,index=True)
+    amount = Column(Float,index=True)
+    category = Column(String,index=True)
+    purchase_date = Column(Date,index=True)
 
     user_id = Column(Integer, ForeignKey("users.id"))
     user = relationship("User", back_populates="expenses")

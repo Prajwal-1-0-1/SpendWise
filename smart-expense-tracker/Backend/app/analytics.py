@@ -54,6 +54,8 @@ def get_category_expenditure(category: str, current_user: User = Depends(get_cur
     db.close()
     return {"category_expenditure": total}
 
+
+
 @router.get("/merchant_expenditure/{merchant}")
 def get_merchant_expenditure(merchant: str, current_user: User = Depends(get_current_user)):
     db = SessionLocal()
