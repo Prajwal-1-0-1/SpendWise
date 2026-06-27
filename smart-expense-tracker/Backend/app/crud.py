@@ -36,6 +36,12 @@ async def upload_receipt(file: UploadFile = File(...),current_user: User = Depen
         if os.path.exists(filepath):
             os.remove(filepath)
     
+
+    if not receipt_data["merchant"] or not receipt_data["amount"]:
+        raise HTTPException(400,"Receipt invalid")
+    
+    if not receipt_data["category"] or not receipt_data["purchase_date"]:
+        raise HTTPException(400,"Receipt invalid")
     
     expense = Expense(
     merchant=receipt_data["merchant"],
@@ -44,6 +50,8 @@ async def upload_receipt(file: UploadFile = File(...),current_user: User = Depen
     purchase_date=receipt_data["purchase_date"],
     user_id=current_user.id
     )
+
+    
 
     db.add(expense)
     db.commit()
