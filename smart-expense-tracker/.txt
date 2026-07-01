@@ -1,0 +1,50 @@
+🔐 Authentication & Security
+
+How does JWT authentication work in your app? Walk me through the flow from registration to accessing a protected endpoint.
+Where do you store the JWT secret key, and why is that important? What happens if it leaks?
+What's the difference between Authentication and Authorization? How does your app handle both?
+Your /login endpoint uses form fields instead of JSON body — why does FastAPI's OAuth2 flow require this?
+How do you hash passwords before storing them? Why is plain-text storage a critical vulnerability?
+What is token expiry, and does your implementation handle it? What happens when a token expires?
+
+
+🗄️ Database & ORM
+
+Why did you use PostgreSQL over SQLite for this project?
+Explain the relationship between your SQLAlchemy models and the actual database tables. How does Base.metadata.create_all() work?
+What is the difference between models.py and schemas.py in your project? Why do you need both?
+How do you prevent SQL injection in your CRUD operations?
+If two users upload receipts at the same time, can there be a race condition in your DB writes? How would you handle it?
+
+
+📁 File Handling & AI Integration
+
+You temporarily save uploaded receipts to uploads/ and delete them after parsing — why not pass the image directly to Gemini in memory?
+What happens if Gemini fails to parse the receipt or returns incomplete data? How does your app handle that?
+How do you validate the uploaded file? What if a user uploads a .exe or a corrupt image?
+What is the structure of the prompt you send to Gemini? How do you ensure it returns structured data like merchant, amount, and category?
+
+
+🏗️ API Design & FastAPI
+
+Why did you split routes into auth_routes.py and crud.py instead of putting everything in main.py?
+What is an APIRouter in FastAPI and how does it help with code organization?
+Your GET /crud/get_expenses returns all expenses for the authenticated user — how do you ensure one user can't access another user's expenses?
+What HTTP status codes does your API return for: successful creation, unauthorized access, and resource not found?
+FastAPI is async-capable — are your database calls and Gemini calls actually async? What's the difference between def and async def route handlers?
+
+
+🧩 System Design & Architecture
+
+How would you redesign this app to support 10,000 concurrent users uploading receipts?
+Right now receipts are deleted after parsing. What if a user wants to re-parse or audit their original receipt? How would you redesign storage?
+What would you add to make the analytics.py module useful — what queries or aggregations would be valuable to a user?
+How would you containerize this app with Docker? What would your Dockerfile and docker-compose.yml look like?
+If Gemini's API goes down, your entire receipt upload feature breaks. How would you make the system more resilient?
+
+
+🐛 Debugging & Edge Cases
+
+A user reports their expense amount was parsed incorrectly as null. How would you debug this end-to-end?
+Your app deletes the uploaded file after parsing. What if the server crashes between saving and deleting? Is there a cleanup strategy?
+How would you add rate limiting to the /crud/upload-receipt endpoint to prevent abuse?

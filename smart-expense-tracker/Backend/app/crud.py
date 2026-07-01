@@ -3,7 +3,8 @@ from app.database import engine,SessionLocal
 from app.models import Base,Expense, User
 from app.auth import get_current_user, oauth2_scheme
 from app.services.gemini_service import parse_receipt
-from app.schemas import ExpenseUpdate
+from app.services.normalize import normalize_merchant, normalize_category
+from app.schemas import ExpenseCreate, ExpenseUpdate
 import os
 
 
@@ -43,6 +44,9 @@ async def upload_receipt(file: UploadFile = File(...),current_user: User = Depen
     if not receipt_data["category"] or not receipt_data["purchase_date"]:
         raise HTTPException(400,"Receipt invalid")
     
+    receipt_data["merchant"] = normalize_merchant(db, receipt_data["merchant"], current_user.id)
+    receipt_data["category"] = normalize_category(db, receipt_data["category"], current_user.id)
+    
     expense = Expense(
     merchant=receipt_data["merchant"],
     amount=receipt_data["amount"],
@@ -60,6 +64,24 @@ async def upload_receipt(file: UploadFile = File(...),current_user: User = Depen
     return {"message" : "Receipt uploaded successfully", "expense" : expense}
 
 
+@router.post("/add-expense")
+def add_expense(expense_data: ExpenseCreate, current_user: User = Depends(get_current_user), db: SessionLocal = Depends(get_db)):
+    merchant = normalize_merchant(db, expense_data.merchant, current_user.id)
+    category = normalize_category(db, expense_data.category, current_user.id)
+
+    expense = Expense(
+        merchant=merchant,
+        amount=expense_data.amount,
+        category=category,
+        purchase_date=expense_data.purchase_date,
+        user_id=current_user.id
+    )
+
+    db.add(expense)
+    db.commit()
+    db.refresh(expense)
+
+    return {"message": "Expense added successfully", "expense": expense}
 
 
 @router.get("/get_expenses")
