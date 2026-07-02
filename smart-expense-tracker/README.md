@@ -1,155 +1,178 @@
-# Smart Expense Tracker
+# SpendWise
 
-A FastAPI backend for tracking expenses with user authentication, receipt upload, and AI-powered receipt parsing.
+An AI-powered full stack expense tracker that extracts receipt data using Google Gemini and helps users organize and visualize their spending.
 
-## Overview
+## Features
 
-This repository contains a backend service that enables users to:
+- JWT Authentication
+- Expense CRUD (Create, Read, Update, Delete)
+- AI-powered receipt parsing using Google Gemini
+- Dashboard with expense analytics and charts
+- Receipt image upload
+- Search, filter, and sort expenses
+- Responsive user interface
 
-- register and login with JWT authentication
-- upload receipt images
-- parse receipt data using Google Gemini
-- store expenses in PostgreSQL
-- view, retrieve, and delete expenses per user
+## Tech Stack
+
+### Backend
+- FastAPI
+- PostgreSQL
+- SQLAlchemy
+- JWT Authentication
+- Google Gemini API
+
+### Frontend
+- React (Vite)
+- Tailwind CSS
+- React Router
+- Axios
+- Recharts
 
 ## Project Structure
 
-```
+```text
 smart-expense-tracker/
 ├── Backend/
-│   ├── app/
-│   │   ├── analytics.py
-│   │   ├── auth.py
-│   │   ├── auth_routes.py
-│   │   ├── crud.py
-│   │   ├── database.py
-│   │   ├── main.py
-│   │   ├── models.py
-│   │   ├── schemas.py
-│   │   └── services/
-│   │       ├── gemini_service.py
-│   │       └── receipt_ai.py
-│   ├── requirements.txt
-│   └── uploads/
 ├── Frontend/
 └── README.md
 ```
 
-## Features
+## Installation
 
-- user registration and login
-- JWT bearer token authentication
-- receipt image upload
-- AI parsing of merchant, amount, category, and purchase date
-- PostgreSQL-backed expense storage
-- per-user expense retrieval and deletion
-
-## Prerequisites
-
-- Python 3.11+
-- PostgreSQL
-- pip
-- Google Gemini API key
-
-## Setup
-
-1. Open a terminal at the repository root:
+### 1. Clone the Repository
 
 ```bash
-cd smart-expense-tracker\Backend
+git clone https://github.com/<your-github-username>/SpendWise.git
+cd SpendWise
 ```
 
-2. Create and activate a virtual environment:
+---
+
+### Backend Setup
+
+Navigate to the backend directory.
+
+```bash
+cd Backend
+```
+
+Create and activate a virtual environment.
+
+**Windows**
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-3. Install dependencies:
+**Linux/macOS**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install the required dependencies.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Configuration
-
-### Database
-
-Open `Backend/app/database.py` and update the `DATABASE_URL` with your PostgreSQL credentials.
-
-Example:
-
-```python
-DATABASE_URL = "postgresql://postgres:password@localhost/smart_expense"
-```
-
-### Gemini API Key
-
-Create a `.env` file in `Backend/` with:
+Create a `.env` file inside the `Backend` directory.
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-The key is used by `Backend/app/services/gemini_service.py` to parse receipts.
+Configure your PostgreSQL database by updating the database connection settings.
 
-## Run the Application
-
-From `smart-expense-tracker/Backend`:
+Run the backend server.
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Visit the interactive docs:
+The backend will be available at:
 
-```text
+```
+http://127.0.0.1:8000
+```
+
+---
+
+### Frontend Setup
+
+Open a new terminal and navigate to the frontend directory.
+
+```bash
+cd Frontend
+```
+
+Install the dependencies.
+
+```bash
+npm install
+```
+
+Create a `.env` file (or copy `.env.example`).
+
+```env
+VITE_API_URL=
+```
+
+Leave `VITE_API_URL` empty during development if using the Vite development proxy.
+
+Start the development server.
+
+```bash
+npm run dev
+```
+
+The frontend will be available at:
+
+```
+http://127.0.0.1:5173
+```
+
+## Environment Variables
+
+### Backend
+
+Create a `.env` file inside the `Backend` directory.
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+### Frontend
+
+Create a `.env` file inside the `Frontend` directory.
+
+```env
+VITE_API_URL=
+```
+
+For local development, leave `VITE_API_URL` empty if using the Vite proxy. For production, set it to the deployed backend URL.
+
+## API Documentation
+
+After starting the backend, FastAPI automatically generates interactive API documentation.
+
+Swagger UI:
+
+```
 http://127.0.0.1:8000/docs
 ```
 
-## API Endpoints
+ReDoc:
 
-### Authentication
-
-- `POST /register`
-  - Body: `{ "username": "user", "password": "pass" }`
-  - Response: `{ "message": "User created" }`
-
-- `POST /login`
-  - Form fields: `username`, `password`
-  - Response: `{ "access_token": "...", "token_type": "bearer" }`
-
-### Expense Routes (authenticated)
-
-All expense endpoints require the header:
-
-```http
-Authorization: Bearer <access_token>
 ```
-
-- `POST /crud/upload-receipt`
-  - Form field: `file`
-  - Upload a receipt image and save parsed expense data.
-
-- `GET /crud/get_expenses`
-  - Returns all expenses for the authenticated user.
-
-- `GET /crud/get_expense/{id}`
-  - Returns a single expense by ID for the authenticated user.
-
-- `DELETE /crud/delete_expenses/{id}`
-  - Deletes an expense by ID for the authenticated user.
-
-## Notes
-
-- Uploaded receipts are temporarily saved to `uploads/` and removed after parsing.
+http://127.0.0.1:8000/redoc
+```
 
 ## Future Improvements
 
-- build a frontend in `Frontend/`
-- containerize with Docker
-
-## Author
-
-Prajwal Y S
+- Docker support
+- Budget tracking and spending limits
+- Monthly and yearly expense reports
+- Cloud storage for receipt images
