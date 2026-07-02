@@ -78,7 +78,7 @@ export default function Dashboard() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <p className="text-sm font-medium text-gray-500">Total Spending</p>
           <p className="text-3xl font-bold text-gray-900 mt-1">
-            ${totalSpending.toFixed(2)}
+            ₹{totalSpending.toFixed(2)}
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function Dashboard() {
                     <p className="text-xs text-gray-500">{exp.category || 'Uncategorized'}</p>
                   </div>
                   <span className="text-sm font-semibold text-gray-900">
-                    ${Number(exp.amount).toFixed(2)}
+                    ₹{Number(exp.amount).toFixed(2)}
                   </span>
                 </li>
               ))}
@@ -145,7 +145,7 @@ export default function Dashboard() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => `$${value}`} />
+                <Tooltip formatter={(value) => `₹${value}`} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

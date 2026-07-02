@@ -10,12 +10,16 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "https://spend-wise-brown-iota.vercel.app",
+        "https://spend-wise-git-main-dinnerbone.vercel.app",
+    ],
     allow_origin_regex=r"https://spend-wise-.*-dinnerbone\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 
 app.include_router(analytics_router)

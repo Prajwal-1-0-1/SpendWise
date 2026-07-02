@@ -153,7 +153,7 @@ export default function Expenses() {
                       {exp.category || 'Uncategorized'}
                     </td>
                     <td className="px-4 py-3 font-semibold text-gray-900">
-                      ${Number(exp.amount).toFixed(2)}
+                      ₹{Number(exp.amount).toFixed(2)}
                     </td>
                     <td className="px-4 py-3 text-gray-600">
                       {exp.purchase_date

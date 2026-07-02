@@ -48,7 +48,7 @@ export default function ExpenseDetails() {
 
   const detailRows = [
     { label: 'Merchant', value: expense.merchant || expense.merchant_name || 'Unknown' },
-    { label: 'Amount', value: `$${Number(expense.amount).toFixed(2)}` },
+    { label: 'Amount', value: `₹${Number(expense.amount).toFixed(2)}` },
     { label: 'Category', value: expense.category || 'Uncategorized' },
     {
       label: 'Purchase Date',
