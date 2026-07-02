@@ -1,176 +1,133 @@
 # SpendWise
 
-An AI-powered full stack expense tracker that extracts receipt data using Google Gemini and helps users organize and visualize their spending.
+An AI-powered full stack expense tracker that extracts receipt data using Google Gemini and helps users organize, search, and visualize their expenses.
+
+## Live Demo
+
+spend-wise-brown-iota.vercel.app
+
+---
 
 ## Features
 
-- JWT Authentication
-- Expense CRUD (Create, Read, Update, Delete)
-- AI-powered receipt parsing using Google Gemini
-- Dashboard with expense analytics and charts
-- Receipt image upload
-- Search, filter, and sort expenses
-- Responsive user interface
+* JWT-based user authentication
+* Expense CRUD (Create, Read, Update, Delete)
+* AI-powered receipt parsing using Google Gemini
+* Receipt image upload
+* Expense analytics dashboard with charts
+* Search, filter, and sort expenses
+* Responsive user interface
+
+---
 
 ## Tech Stack
 
 ### Backend
-- FastAPI
-- PostgreSQL
-- SQLAlchemy
-- JWT Authentication
-- Google Gemini API
+
+* FastAPI
+* PostgreSQL
+* SQLAlchemy
+* JWT Authentication
+* Google Gemini API
 
 ### Frontend
-- React (Vite)
-- Tailwind CSS
-- React Router
-- Axios
-- Recharts
+
+* React (Vite)
+* Tailwind CSS
+* React Router
+* Axios
+* Recharts
+
+---
 
 ## Project Structure
 
 ```text
-smart-expense-tracker/
+SpendWise/
 ├── Backend/
 ├── Frontend/
 └── README.md
 ```
 
-## Installation
+---
 
-### 1. Clone the Repository
+## Getting Started
+
+### Clone the repository
 
 ```bash
 git clone https://github.com/<your-github-username>/SpendWise.git
 cd SpendWise
 ```
 
----
-
-### Backend Setup
-
-Navigate to the backend directory.
+### Backend
 
 ```bash
 cd Backend
-```
-
-Create and activate a virtual environment.
-
-**Windows**
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-**Linux/macOS**
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Install the required dependencies.
-
-```bash
 pip install -r requirements.txt
-```
-
-Create a `.env` file inside the `Backend` directory.
-
-```env
-GEMINI_API_KEY=your_gemini_api_key
-```
-
-Configure your PostgreSQL database by updating the database connection settings.
-
-Run the backend server.
-
-```bash
 uvicorn app.main:app --reload
-```
-
-The backend will be available at:
-
-```
-http://127.0.0.1:8000
-```
-
----
-
-### Frontend Setup
-
-Open a new terminal and navigate to the frontend directory.
-
-```bash
-cd Frontend
-```
-
-Install the dependencies.
-
-```bash
-npm install
-```
-
-Create a `.env` file (or copy `.env.example`).
-
-```env
-VITE_API_URL=
-```
-
-Leave `VITE_API_URL` empty during development if using the Vite development proxy.
-
-Start the development server.
-
-```bash
-npm run dev
-```
-
-The frontend will be available at:
-
-```
-http://127.0.0.1:5173
-```
-
-## Environment Variables
-
-### Backend
-
-Create a `.env` file inside the `Backend` directory.
-
-```env
-GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ### Frontend
 
-Create a `.env` file inside the `Frontend` directory.
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+Before running the project, create the required `.env` files in the `Backend` and `Frontend` directories.
+
+---
+
+## Environment Variables
+
+### Backend (`Backend/.env`)
+
+```env
+GEMINI_API_KEY=
+
+DB_HOST=
+DB_PORT=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+
+SECRET_KEY=
+ALGORITHM=
+ACCESS_TOKEN_EXPIRE_MINUTES=
+```
+
+### Frontend (`Frontend/.env`)
 
 ```env
 VITE_API_URL=
 ```
 
-For local development, leave `VITE_API_URL` empty if using the Vite proxy. For production, set it to the deployed backend URL.
+* Leave `VITE_API_URL` empty for local development.
+* Set it to your deployed backend URL for production.
 
-## API Documentation
+---
 
-After starting the backend, FastAPI automatically generates interactive API documentation.
+## Deployment
 
-Swagger UI:
+| Service           | Platform | URL                                                |
+| ----------------- | -------- | -------------------------------------------------- |
+| Frontend          | Vercel   | https://spend-wise-l4ntsn9pz-dinnerbone.vercel.app |
+| Backend           | Render   | https://spendwise-1gfp.onrender.com                |
+| API Documentation | Render   | https://spendwise-1gfp.onrender.com/docs           |
 
-```
-http://127.0.0.1:8000/docs
-
-```
+---
 
 ## Future Improvements
 
-- Docker support
-- Budget tracking and spending limits
-- Monthly and yearly expense reports
-- Cloud storage for receipt images
+* Budget tracking and spending limits
+* Monthly and yearly expense reports
+* Cloud storage for receipt images
+* Export expenses to CSV/PDF
+
+---
 
 ## Author
-Prajwal Y S
+
+**Prajwal Y S**
