@@ -10,7 +10,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    "https://spend-wise-anvwpmyi3-dinnerbone.vercel.app",  # your Vercel frontend
+    "https://spend-wise-fejo458g0-dinnerbone.vercel.app/",  
 ]
 
 app.add_middleware(
