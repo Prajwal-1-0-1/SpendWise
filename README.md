@@ -4,7 +4,7 @@ An AI-powered full stack expense tracker that extracts receipt data using Google
 
 ## Live Demo
 
-spend-wise-brown-iota.vercel.app
+https://spend-wise-brown-iota.vercel.app
 
 ---
 
